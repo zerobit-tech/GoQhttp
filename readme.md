@@ -24,7 +24,7 @@ QHTTP is a Golang application designed to seamlessly expose IBM i (AS/400) store
 
 ## Getting Started
 
-## Supported platforms
+### Supported platforms
 - Linux 
 - Windows
 - IBM I : check https://github.com/onlysumitg/ibmigo   
