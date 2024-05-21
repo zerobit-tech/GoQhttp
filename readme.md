@@ -58,7 +58,7 @@ go mod tidy
 
 ```bash
 
-go run ./cmd/web
+go run ./cmd/web --https=false
 
 ```
 
@@ -108,6 +108,12 @@ PING_SERVER_EVERY=20s
 
 ALLOWHTMLTEMPLATES=Y
 ```
+
+
+## Vendor for simplify dependency management
+1. `go mod vendor ` : Create a Vendor Directory
+2. `go mod vendor -u` :Update the Vendor Directory
+3. `export GOFLAGS=-mod=vendor`  : By setting GOFLAGS, you can ensure that all builds use the vendor directory
 
 ## Docker file
 
