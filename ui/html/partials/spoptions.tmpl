@@ -1,0 +1,120 @@
+{{define "spoptions"}}
+
+{{if .StoredProc.EndPointName}}
+ 
+
+
+<li class="c-sidebar-nav-title">EndPoint: 
+</li>
+        
+<li class="c-sidebar-nav-item">
+  <a class="c-sidebar-nav-link"  href='/sp/{{.StoredProc.ID}}'>{{.StoredProc.EndPointName}}</a>
+
+    
+ 
+
+</li>
+
+{{end}}
+
+
+
+<li class="c-sidebar-nav-item">
+      
+<a class="c-sidebar-nav-link" href='/sp/logs/{{.StoredProc.ID}}' >
+    <svg class="c-icon mfe-2">
+        <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-speech"></use>
+    </svg>
+
+    Logs</a>
+</li>
+
+{{if not .StoredProc.IsSpecial}}
+{{if $.Features.AllowParameterAlias}}
+<li class="c-sidebar-nav-item">
+    <a class="c-sidebar-nav-link" href='/sp/paramalias/{{.StoredProc.ID}}' >
+         
+          <svg class="c-icon mfe-2">
+            <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-copy"></use>
+        </svg>
+
+        Param Alias</a>
+ </li>
+ {{end}}
+
+
+ <li class="c-sidebar-nav-item">
+  <a class="c-sidebar-nav-link" href='/sp/paramvalid/{{.StoredProc.ID}}' >
+       
+        <svg class="c-icon mfe-2">
+          <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-asterisk"></use>
+      </svg>
+
+      Param Validators</a>
+</li>
+
+
+ {{if $.Features.AllowParamPlacement}}
+ <li class="c-sidebar-nav-item">
+     <a class="c-sidebar-nav-link" href='/sp/paramplacement/{{.StoredProc.ID}}' >
+          
+           <svg class="c-icon mfe-2">
+             <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-swap-vertical"></use>
+         </svg>
+ 
+         Param Placement</a>
+  </li>
+  {{end}}
+
+
+
+ <li class="c-sidebar-nav-item">
+      
+
+ 
+    <a class="c-sidebar-nav-link" href='/sp/update/{{.StoredProc.ID}}' >
+
+      <svg class="c-icon mfe-2">
+        <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-pencil"></use>
+    </svg>Edit</a>
+    
+</li>
+
+
+<li class="c-sidebar-nav-item">
+    <a class="c-sidebar-nav-link" href='/sp/delete/{{.StoredProc.ID}}' >
+         
+          <svg class="c-icon mfe-2">
+            <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-trash"></use>
+        </svg>
+
+        Delete</a>
+ </li>
+ {{end}}
+
+
+
+ 
+
+
+ <li class="c-sidebar-nav-item">
+  <a class="c-sidebar-nav-link" href='/sp/refresh/{{.StoredProc.ID}}' >
+       
+    <svg class="c-icon mfe-2">
+      <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-reload"></use>
+  </svg>
+
+      Reload</a>
+</li>
+
+<li class="c-sidebar-nav-divider"></li>
+
+
+ 
+ 
+ 
+ 
+ <li class="c-sidebar-nav-title">----------------</li>
+       
+ 
+{{end}}

@@ -1,0 +1,148 @@
+{{define "title"}}
+Server Delete
+{{end}}
+
+{{define "content"}}
+ 
+    <div class="row p-2">
+       
+        <div class="col ">
+       <div class="card ">
+        <div class="card-header">
+            <p class="h5">Delete Server</p>
+        </div>
+        <div class="card-body"> 
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <td>Server ID</td>
+                        <td>{{.Server.ID}}</td>
+                    </tr>
+            
+                    <tr>
+                        <td>Server Name</td>
+                        <td>{{.Server.Name}}</td>
+                    </tr>
+            
+                    <tr>
+                        <td>Server IP</td>
+                        <td>{{.Server.IP}}</td>
+                    </tr>
+                
+                 
+            
+                    <tr>
+                        <td>User Name</td>
+                        <td>{{.Server.UserName}}</td>
+                    </tr>
+            
+               
+            
+                 
+                </tbody>
+            </table>
+
+            {{ if .AllowServerDelete }}
+            <form method="post" action="/servers/delete">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                  <input type="hidden" name="serverid" value="{{.Server.ID}}">
+            <button type="submit" class="btn btn-danger">Confirm</button>
+        
+            </form>
+            {{else}}
+                <p>Can not delete. Server is in use.</p>
+            {{end}}
+        </div>
+    </div>   
+    </div> 
+
+</div> 
+ 
+
+
+<div class="row p-2">
+  <div class="col">
+    
+    <span  hx-get="/endpoints?server={{$.Server.ID}}" hx-trigger="load" hx-select="#eplistcard">
+      <p>Loading...</p>
+  </span>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="row p-2">
+    <div class="col">
+      <div class="card ">
+        <div class="card-header">
+          <p class="h5">Users  </p>
+        </div>
+        <div class="card-body">
+          <table id="rbackrolelist"
+            class="table   table-borderless table-responsive-sm table-striped    ">
+            <thead class="thead-dark">
+  
+            <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Created</th>
+                <th>Super User</th>
+                <th>Staff</th>
+
+                <th>Verified</th>
+ 
+                <th>Options </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {{if .Users}}
+
+            {{range .Users}}
+            <tr>
+                <td>{{.Email}}   </td>
+
+                <td>{{.Name}} </td>
+                <td>{{.Created }} </td>
+                <td>{{.IsSuperUser | yesNo}} </td>
+                <td>{{.IsStaff | yesNo}} </td>
+
+                <td>{{.HasVerified | yesNo}} </td>
+                 
+
+                <td>
+
+                    <a class="btn btn-ghost-info  " href='/users/edit/{{.ID}}'>   
+                        <svg class="c-icon">
+                        <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-pencil"></use>
+                    </svg>
+                  </a>
+                    <a class="btn btn-danger" href='/users/delete/{{.ID}}'>Delete</a>
+                     
+
+
+                </td>
+
+            </tr>
+            {{end}}
+            {{end}}
+        </tbody>
+    </table>
+
+</div>
+</div>
+</div>
+</div>
+
+
+{{end}}
+
+{{define "aftercontent"}}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+
+ 
+{{end}}

@@ -1,0 +1,141 @@
+{{define "title"}}
+Servers
+{{end}}
+
+{{define "content"}}
+ 
+<div class="row p-2">
+  <div class="col">
+    <div class="card ">
+      <div class="card-header">
+        <p class="h5">Servers 
+
+          {{if .CurrentUser.IsSuperUser}}
+          <a id="addserverbtn"  hx-push-url="true"  class="btn btn-ghost-info float-right" href="/servers/add">+Add</a>
+          {{end}}
+        </p>
+       
+      </div>
+
+ 
+      <div class="card-body">
+
+    <table id="serverslist"           class="table   table-borderless table-responsive-sm table-striped    ">
+      <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+           
+            <th>IP</th>
+           
+            <th>Port</th>
+            <!-- <th>SSL</th> -->
+            
+            
+            <th>User</th>
+
+            <th>Connections (max/idle)</th>
+            <th>Age (max/idle)</th>
+
+            <th>Options </th>
+
+        </tr>
+          </thead>
+          <tbody>
+            {{if .Servers}}
+
+        {{range .Servers}}
+        <tr>
+            <td> {{.Name}}</td>
+          
+            
+            <td>{{.IP}}</td>
+             
+            <td>{{.Port}}</td>
+            <!-- <td>{{yesNo .Ssl}}</td> -->
+           
+           
+            <td>{{.UserName}}</td>
+            <td>{{.MaxOpenConns}}/{{.MaxIdleConns}}</td>
+            <td>{{.ConnMaxLifetime}}/{{.ConnMaxIdleTime}}</td>
+
+            <td>
+                 
+                  <a  hx-push-url="true"  class="btn btn-ghost-info" href='/servers/{{.ID}}'  >View</a> 
+                  {{if $.CurrentUser.IsSuperUser}}
+                    
+                  
+                  <a  hx-push-url="true"  class="btn btn-ghost-info" 
+                     data-toggle="tooltip" data-placement="bottom" title="Edit" 
+                     href='/servers/update/{{.ID}}'  >   <svg class="c-icon mfe-2">
+                      <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-pencil"></use>
+                  </svg></a> 
+                     
+                  <a class="btn btn-ghost-info" 
+                  data-toggle="tooltip" data-placement="bottom" title="Postman collection" 
+                  href='/postman/s/{{.ID}}'  >   
+                   <svg class="c-icon mfe-2">
+                   <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-arrow-bottom"></use>
+               </svg></a>
+                  
+                  <a class="btn btn-ghost-danger"   hx-push-url="true" 
+                     data-toggle="tooltip" data-placement="bottom" title="Delete" 
+                     href='/servers/delete/{{.ID}}'  >   
+                      <svg class="c-icon mfe-2">
+                      <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-trash"></use>
+                  </svg></a>
+
+
+
+            
+
+                     {{ end }}
+            </td>
+
+        </tr>
+        {{end}}
+        {{end}}
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>
+</div>
+    {{end}}
+
+
+{{define "aftercontent"}}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+
+<script>
+  
+    $(document).ready( function () {
+      $('#serverslist').DataTable(
+          {
+              "language": {
+                "emptyTable": "No records. Please add a new server."
+              }
+          }
+      );
+
+
+      {{if not .Servers}}
+
+
+introJs().setOptions({
+steps: [ 
+
+{
+  title: 'Need a new server!',
+element: document.querySelector('#addserverbtn'),
+intro: 'Click here to add.'
+},
+
+
+]
+}).start();
+{{end}}
+  } );
+</script>
+{{end}}

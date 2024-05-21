@@ -1,0 +1,84 @@
+{{define "title"}}
+User token table
+{{end}}
+
+{{define "content"}}
+ 
+<div class="row p-2">
+  <div class="col">
+    <div class="card ">
+      <div class="card-header">
+        <p class="h5">User Token Sync table
+
+        </p>
+       
+      </div>
+
+ 
+      <div class="card-body">
+        <p>The User Token Table provides a structured mechanism for the purposeful management of user tokens within the operational confines of the IBM I server environment. In scenarios where a user's email address is duly registered within this table, the standard procedure of QHttp abstaining from the autonomous creation of tokens comes into effect, thereby establishing a dependency on the User Token Table for the precise task of token generation.
+
+        </p>
+
+        <p>This functionality assumes significance when there exists a deliberate intention to supersede the default token generation algorithm. A pertinent instance is the incorporation of JSON Web Tokens (JWTs), which can be seamlessly employed through this mechanism. </p>
+
+        <ol>
+          <li>Following table contains the list of required fields.</li>
+          <li>You can include more columns like audit columns as per you requirements.</li>
+          <li>Column sequence is not important.But columns name and data types are important.</li>
+
+        </ol>
+
+
+    <table id="promotionlist"           class="table   table-borderless table-responsive-sm table-striped    ">
+      <thead class="thead-dark">
+        <tr>
+            <th>column name</th> 
+            <th>Data type</th>
+            <th>Details</th>      
+
+        </tr>
+          </thead>
+          <tbody>
+           
+        <tr>
+            <td>useremail</td>
+            <td>String </td>
+            <td>User email id </td>
+        </tr>
+
+        <tr>
+          <td>token</td>
+          <td>String </td>
+          <td>User token </td>
+      </tr>
+
+ 
+
+
+ 
+
+<tr>
+  <td>Status</td>
+  <td>String / Char(1)</td>
+  <td>Blank for pending records. E: Error. C: Completed </td>
+</tr>
+
+
+<tr>
+  <td>StatusMessage</td>
+  <td>String/ Char(100) </td>
+  <td>Message to explain the status<td>
+</tr>
+
+
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>
+</div>
+    {{end}}
+
+
+ 

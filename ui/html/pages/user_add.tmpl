@@ -1,0 +1,210 @@
+{{define "title"}}
+{{if .Form.ID}} Edit {{else}} Add {{end}} User
+{{end}}
+
+{{define "content"}}
+<div class="row p-2">
+    <div class="col-xl-6">
+        <div class="card ">
+            <div class="card-header">
+                <p class="h5"> {{if .Form.ID}} Edit {{else}} Add {{end}} User : {{.Form.Email}}
+
+                </p>
+
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col">
+
+                        <form action="/users/{{if .Form.ID}}edit/{{.Form.ID}}{{else}}add{{end}}" method='POST'>
+                            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                            <div class="form-group">
+                                <label>Email:</label>
+
+                                <input class="form-control {{with .Form.FieldErrors.email}} is-invalid {{end}}"
+                                    type='text' name='email' value='{{.Form.Email}}' required>
+                                {{with .Form.FieldErrors.email}}
+                                <div class='invalid-feedback'>{{.}}</div>
+                                {{end}}
+
+                            </div>
+
+                            <div class="form-group">
+                                <label>Name:</label>
+
+                                <input class="form-control {{with .Form.FieldErrors.name}} is-invalid {{end}}"
+                                    type='text' name='name' value='{{.Form.Name}}' required>
+                                {{with .Form.FieldErrors.name}}
+                                <div class='invalid-feedback'>{{.}}</div>
+                                {{end}}
+
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label>Password:</label>
+
+                                <input class="form-control {{with .Form.FieldErrors.password}} is-invalid {{end}}"
+                                    type='password' name='password'>
+                                    {{if .Form.ID}}
+                                    <small id="landingpageh" class="form-text text-muted">Leave it blank if dont want to update the password.</small>   
+                                    {{end}}
+
+                                {{with .Form.FieldErrors.password}}
+                                <div class='invalid-feedback'>{{.}}</div>
+                                {{end}}
+                            </div>
+                            <div class="form-group">
+                                <label for="defaultserver">Default Server</label>
+
+                                <SELECT id="defaultserver" class="form-control" name="serverid">
+                                    <OPTION value="">Assign Server</OPTION>
+
+                                    {{if .Servers}}
+                                    {{range .Servers}}
+                                    <OPTION {{if eq .ID $.Form.ServerId}} selected {{end}} value="{{.ID}}">{{.Name}}
+                                    </OPTION>
+                                    {{end}}
+                                    {{end}}
+                                </SELECT>
+                            </div>
+                            <div class="form-group">
+                                <label>Max allowed Endpoints:</label>
+
+                                <input
+                                    class="form-control {{with .Form.FieldErrors.maxallowedendpoints}} is-invalid {{end}}"
+                                    type='number' name='maxallowedendpoints' value='{{.Form.MaxAllowedEndpoints}}'
+                                    required>
+
+                                    <small id="maxallowedendpointsh" class="form-text text-muted"> Negative number: no limit</small>   
+   
+                                {{with .Form.FieldErrors.maxallowedendpoints}}
+                                <div class='invalid-feedback'>{{.}}</div>
+                                {{end}}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Landing page:</label>
+
+                                <input class="form-control {{with .Form.FieldErrors.landingpage}} is-invalid {{end}}"
+                                    type='text' name='landingpage' value='{{.Form.LandingPage}}'  >
+
+                                    <small id="landingpageh" class="form-text text-muted"></small>   
+                                {{with .Form.FieldErrors.landingpage}}
+                                <div class='invalid-feedback'>{{.}}</div>
+                                {{end}}
+
+                            </div>
+
+
+                            <div class="form-check">
+                                <input value='true' {{if .Form.IsSuperUser}} checked {{end}} type="checkbox"
+                                    class=" form-check-input" name="issuperuser" id="issuperuser">
+                                <label class="form-check-label" for="issuperuser">Super Admin</label>
+                            </div>
+                            <br>
+
+                            
+                            <div class="form-check">
+                                <input value='true' {{if .Form.IsStaff}} checked {{end}} type="checkbox"
+                                    class=" form-check-input" name="isstaff" id="isstaff">
+                                <label class="form-check-label" for="isstaff">Staff</label>
+                            </div>
+                            <br>
+        
+                            <div class="form-check">
+                                <input value='true' {{if .Form.HasVerified}} checked {{end}} type="checkbox"
+                                    class=" form-check-input" name="hasverified" id="hasverified">
+                                <label class="form-check-label" for="hasverified">Verified</label>
+                            </div>
+                            <br>
+
+
+                            <br> <br>
+                            <button type="submit" class="btn btn-info"> <svg class="c-icon">
+                                    <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-check-alt">
+                                    </use>
+                                </svg>
+                                Submit</button>
+                        </form>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
+               
+                </div>
+            </div>
+        </div>
+    </div>
+    {{if .Form.ID}}
+    <div class="col-xl-6">
+        <div class="card ">
+            <div class="card-header">
+                <p class="h5"> Auth Token  
+                    {{if .Form.ID}}
+                    <a class="btn btn-ghost-info float-right" href="/users/updatetoken/{{.Form.ID}}">Update
+                        Token</a>
+                    {{end}}
+
+                </p>
+
+            </div>
+            <div class="card-body">
+                {{if .Form.Token}}
+                <p>
+                    <strong><span class="copyclip" data-clipboard-text="{{.Form.Token}}">{{.Form.Token}}</span></strong></p>
+                {{end}}
+        
+     
+            </div>
+        </div>
+
+
+    </div>
+    {{end}}
+
+</div>
+{{end}}
+
+
+{{block "aftercontent" .}}
+<script>
+  var clipboard = new ClipboardJS('.copyclip');
+
+
+clipboard.on('success', function(e) {
+  
+
+    Swal.fire({
+      position: 'top-end',
+      icon: "success",
+      text: "Copied to clipboard",
+      showConfirmButton: false,
+      timer: 2000,
+      showCloseButton: true
+    })
+
+    e.clearSelection();
+});
+
+clipboard.on('error', function(e) {
+    console.error('Action:', e.action);
+    console.error('Trigger:', e.trigger);
+});
+</script>
+{{end}}
