@@ -50,7 +50,11 @@ git clone https://github.com/zerobit-tech/GoQhttp.git
 
 ### Run QHTTP
 
+```bash
 
+go mod tidy
+
+```
 
 ```bash
 
@@ -107,8 +111,7 @@ ALLOWHTMLTEMPLATES=Y
 
 ## Docker file
 
-pending
-
+1. Please refer `dockerfile_builder.sh` script
 
 ## License
 

@@ -1,6 +1,6 @@
 FROM debian
 
-ARG APP_VERSION="v1.3.2"
+ARG APP_VERSION="v1.0.0"
  
 ENV PORT=4091
 EXPOSE ${PORT}
@@ -26,9 +26,4 @@ RUN apt update && \
 
 CMD [ "./QHttp","--https=false" ]
 
-# docker build -t zerobittech/qhttp .
-# docker run -p 4081:4081 -v /home/sumit/ideaprojects/GoQhttp/bin/lic:/app/lic           --name=qhttp zerobittech/qhttp
-
-
-
-# docker run -p 4081:4081 -v /home/sumit/ideaprojects/GoQhttp/bin/lic:/app/lic  -v /etc/odbc.ini:/etc/odbc.ini     -d    --name=qhttp zerobittech/qhttp
+ 
