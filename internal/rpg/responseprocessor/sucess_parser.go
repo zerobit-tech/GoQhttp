@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/zerobit-tech/GoQhttp/utils/typeutils"
+	"github.com/zerobit-tech/GoQhttp/utils/xmlutils"
 )
 
 // ------------------------------------------------------------------
@@ -187,7 +188,7 @@ func (data *Data) ToJson(outMap map[string]any) {
 func ProcessSucessXML(xmlData string) (map[string]any, error) {
 
 	var xmlService XmlService
-	err := xml.Unmarshal([]byte(xmlData), &xmlService)
+	err := xml.Unmarshal([]byte(xmlutils.RemoveNonUTF8Strings(xmlData)), &xmlService)
 	if err != nil {
 		fmt.Printf("Error unmarshalling XML: %v\n", err)
 		return nil, err

@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-var bytes = []byte{35, 46, 57, 24, 85, 35, 24, 74, 87, 35, 88, 98, 66, 32, 14, 05}
+var byteList = []byte{35, 46, 57, 24, 85, 35, 24, 74, 87, 35, 88, 98, 66, 32, 14, 05}
 
 // This should be in an env file in production
 
@@ -30,7 +30,7 @@ func Encrypt(text, MySecret string) (string, error) {
 		return "", err
 	}
 	plainText := []byte(text)
-	cfb := cipher.NewCFBEncrypter(block, bytes)
+	cfb := cipher.NewCFBEncrypter(block, byteList)
 	cipherText := make([]byte, len(plainText))
 	cfb.XORKeyStream(cipherText, plainText)
 	return Encode(cipherText), nil
@@ -43,7 +43,7 @@ func Decrypt(text, MySecret string) (string, error) {
 		return "", err
 	}
 	cipherText := Decode(text)
-	cfb := cipher.NewCFBDecrypter(block, bytes)
+	cfb := cipher.NewCFBDecrypter(block, byteList)
 	plainText := make([]byte, len(cipherText))
 	cfb.XORKeyStream(plainText, cipherText)
 	return string(plainText), nil

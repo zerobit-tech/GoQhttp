@@ -462,8 +462,8 @@ func (s *Server) call(ctx context.Context, callID string, sp *storedProc.StoredP
 				}
 
 			}
-
-			if p.Mode == "OUT" && keyToUse == "QHTTP_STATUS_CODE" && p.IsInt() {
+			 
+			if p.Mode == "OUT" && keyToUse == "QHTTP_STATUS_CODE" && p.IsNumeric() {
 
 				httpCode, message := httputils.GetValidHttpCode(*v)
 
@@ -476,6 +476,9 @@ func (s *Server) call(ctx context.Context, callID string, sp *storedProc.StoredP
 					if qhttp_status_message == "" {
 						qhttp_status_message = message
 					}
+
+				} else {
+					logEntries = append(logEntries, logger.GetLogEvent("INFO", callID, "Invalid QHTTP_STATUS_CODE found.Skipped", false))
 
 				}
 

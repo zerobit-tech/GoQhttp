@@ -54,6 +54,7 @@ type DBServer interface {
 	PingTimeoutDuration() time.Duration
 	GetSQLToPing() string
 	GetMux() *sync.Mutex
+	HasProfileError(inerr error) (bool, string)
 }
 
 // ---------------------------------------------------
@@ -143,6 +144,7 @@ func getConnectionFromCache(server DBServer) (_ *sql.DB, inuse bool) {
 	// error occured in ping
 	if err != nil {
 
+		server.HasProfileError(err)
 		log.Println("Closing connections .....", err)
 		db.Close()
 		connectionMap.Delete(connectionID)

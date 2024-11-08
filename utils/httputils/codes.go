@@ -3,6 +3,8 @@ package httputils
 import (
 	"net/http"
 	"reflect"
+
+	"github.com/zerobit-tech/GoQhttp/utils/typeutils"
 )
 
 func IsValidHttpCode(code int) (valid bool, message string) {
@@ -17,7 +19,7 @@ func GetValidHttpCode(v any) (code int, message string) {
 	intval, ok := 0, false
 
 	qhttp_status_code := 0
-	qhttp_status_message :=""
+	qhttp_status_message := ""
 	switch reflect.ValueOf(v).Kind() {
 	case reflect.Int32:
 		if intval32, ok2 := (v).(int32); ok2 {
@@ -39,6 +41,16 @@ func GetValidHttpCode(v any) (code int, message string) {
 			intval = int(intval8)
 			ok = ok2
 		}
+
+	// change 2
+	case reflect.Float64:
+		intval = int(typeutils.GetFloatVal(v))
+		ok = true
+
+	// change 3
+	case reflect.Float32:
+		intval = int(typeutils.GetFloatVal(v))
+		ok = true
 	default:
 		intval, ok = (v).(int)
 	}
@@ -48,9 +60,9 @@ func GetValidHttpCode(v any) (code int, message string) {
 		if validCode {
 			qhttp_status_code = int(intval)
 			qhttp_status_message = message
- 
+
 		}
 	}
 
-	return qhttp_status_code,qhttp_status_message
+	return qhttp_status_code, qhttp_status_message
 }

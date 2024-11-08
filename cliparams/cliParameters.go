@@ -91,7 +91,7 @@ func (params *Parameters) Load() {
 	flag.BoolVar(&params.Useletsencrypt, "useletsencrypt", false, "Use let's encrypt ssl certificate")
 	flag.BoolVar(&params.ValidateSetup, "validate", false, "Validate os setup")
 
-	flag.BoolVar(&params.Https, "https", true, "Use https [default true]")
+	flag.BoolVar(&params.Https, "https", false, "Use https [default true]")
 
 	domain := "0.0.0.0"
 	if runtime.GOOS == "windows" {

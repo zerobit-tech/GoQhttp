@@ -193,7 +193,7 @@ func (app *application) PingServers() {
 
 	for _, s := range app.servers.List() {
 		if !app.ShouldPingServer(s) {
-			log.Println("skilling server ping based on last use:", s.Name)
+			log.Println("skipping server ping based on last use:", s.Name)
 			continue
 		}
 

@@ -107,7 +107,7 @@ func (app *application) ProcessRPGAPICall(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		apiCall.Logger("ERROR", fmt.Sprintf("Program Driver not found for: %s %s/%s", r.Method, namespace, endpointName), false)
 		response.Status = http.StatusNotImplemented
-		response.Message = endPointNotfoundError.Error()
+		response.Message = err.Error()
 		app.writeJSONAPI(w, response, nil)
 		return
 

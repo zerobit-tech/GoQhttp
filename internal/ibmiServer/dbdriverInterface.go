@@ -307,6 +307,30 @@ func (s *Server) Exists(ctx context.Context, sp *storedProc.StoredProc) (bool, e
 // ------------------------------------------------------------
 //
 // ------------------------------------------------------------
+func (s *Server) HasProfileError(inerr error) (bool, string) {
+	var odbcError *godbc.Error
+
+	if errors.As(inerr, &odbcError) {
+
+		if len(odbcError.Diag) > 0 {
+			code := odbcError.Diag[0].NativeError
+			switch code {
+			case 8002:
+				s.OnHold = true
+				s.OnHoldMessage = odbcError.Error()
+				return true, odbcError.Error() // SQLDriverConnect: {28000} [IBM][System i Access ODBC Driver]Communication link failure. comm rc=8002 - CWBSY0002 - Password for user SUMITG33 on system PUB400.COM is not correct, Password length = 10, Prompt Mode = Never, System IP Address = 185.113.5.134
+
+			}
+
+		}
+
+	}
+	return false, ""
+}
+
+// ------------------------------------------------------------
+//
+// ------------------------------------------------------------
 func (s *Server) ErrorToHttpStatus(inerr error) (int, string, string, bool) {
 	var odbcError *godbc.Error
 
