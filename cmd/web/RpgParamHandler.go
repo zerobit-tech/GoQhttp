@@ -36,6 +36,8 @@ func (app *application) RpgParamHandlers(router *chi.Mux) {
 		r.Get("/update/{id}", app.rpgParamUpdate)
 		r.Post("/update/{id}", app.rpgParamAddPost)
 
+		r.Get("/delete/{id}", app.rpgParamDeleteConfirm)
+
 		//r.Get("/delete/{id}", app.SPDelete)
 		//r.Post("/delete", app.SPDeleteConfirm)
 
@@ -214,7 +216,7 @@ func (app *application) rpgParamAddPost(w http.ResponseWriter, r *http.Request) 
 	}()
 
 	//http.Redirect(w, r, fmt.Sprintf("/savesql/%s", id), http.StatusSeeOther)
-	http.Redirect(w, r, fmt.Sprintf("/pgmfields/%s", id), http.StatusSeeOther)
+	http.Redirect(w, r, "/pgmfields", http.StatusSeeOther)
 
 }
 
@@ -223,17 +225,18 @@ func (app *application) rpgParamAddPost(w http.ResponseWriter, r *http.Request) 
 // ------------------------------------------------------
 func (app *application) rpgParamDelete(w http.ResponseWriter, r *http.Request) {
 
-	spId := chi.URLParam(r, "spId")
+	id := chi.URLParam(r, "id")
 
-	sP, err := app.storedProcs.Get(spId)
+	rpgParam, err := app.RpgParamModel.Get(id)
 	if err != nil {
-		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("Error: %s", err.Error()))
-		app.goBack(w, r, http.StatusSeeOther)
+		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("Update error: %s", err.Error()))
+		app.goBack(w, r, http.StatusBadRequest)
 		return
 	}
 
 	data := app.newTemplateData(r)
-	data.StoredProc = sP
+
+	data.RpgParam = rpgParam
 
 	app.render(w, r, http.StatusOK, "rpg_param_delete.tmpl", data)
 
@@ -244,38 +247,41 @@ func (app *application) rpgParamDelete(w http.ResponseWriter, r *http.Request) {
 // ------------------------------------------------------
 func (app *application) rpgParamDeleteConfirm(w http.ResponseWriter, r *http.Request) {
 
-	err := r.ParseForm()
-	if err != nil {
-		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("001 Error processing form %s", err.Error()))
-		app.goBack(w, r, http.StatusBadRequest)
-		return
-	}
+	id := chi.URLParam(r, "id")
 
-	spId := r.PostForm.Get("spId")
-	app.invalidateEndPointCache()
-
-	err = app.storedProcs.Delete(spId)
+	rpgParam, err := app.RpgParamModel.Get(id)
 	if err != nil {
 
 		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("Delete error: %s", err.Error()))
-		app.goBack(w, r, http.StatusBadRequest)
+		app.goBack(w, r, http.StatusSeeOther)
 		return
 	}
 
-	go app.deleteSPData(spId) //goroutine
-	app.sessionManager.Put(r.Context(), "flash", "Endpoint deleted sucessfully")
+	err = app.RpgParamModel.Delete(id)
+	if err != nil {
+
+		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("Delete error: %s", err.Error()))
+		app.goBack(w, r, http.StatusSeeOther)
+		return
+	}
+
+	app.sessionManager.Put(r.Context(), "flash", fmt.Sprintf("Param %s deleted sucessfully", rpgParam.Name))
+	app.invalidateEndPointCache()
 
 	go func() {
-		defer concurrent.Recoverer("SPMODIFIED")
+		defer concurrent.Recoverer("RPGPARAMCREATED")
+		defer debug.SetPanicOnFault(debug.SetPanicOnFault(true))
 		userID, _ := app.getCurrentUserID(r)
 
-		logEvent := GetSystemLogEvent(userID, "Endpoint Deleted", fmt.Sprintf("IP %s", r.RemoteAddr), false)
-		logEvent.ImpactedEndpointId = spId
+		logEvent := GetSystemLogEvent(userID, "RPG Param Deleted", fmt.Sprintf(" %s,IP %s", rpgParam.Name, r.RemoteAddr), false)
+		logEvent.ImpactedEndpointId = id
+		logEvent.BeforeUpdate = rpgParam.LogImage()
+		logEvent.AfterUpdate = ""
 		app.SystemLoggerChan <- logEvent
 
 	}()
 
-	http.Redirect(w, r, "/sp", http.StatusSeeOther)
+	http.Redirect(w, r, "/pgmfields", http.StatusSeeOther)
 
 }
 
@@ -289,7 +295,7 @@ func (app *application) rpgParamUpdate(w http.ResponseWriter, r *http.Request) {
 	rpgParam, err := app.RpgParamModel.Get(id)
 	if err != nil {
 		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("Update error: %s", err.Error()))
-		app.goBack(w, r, http.StatusBadRequest)
+		app.goBack(w, r, http.StatusSeeOther)
 		return
 	}
 

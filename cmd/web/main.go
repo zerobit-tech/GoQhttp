@@ -103,7 +103,7 @@ func main() {
 	go app.clearLogsSchedular(db) //goroutine
 	go app.promotionsSchedule()   //goroutine
 	go app.pingServerSchedule()   //goroutine
-
+	go app.deleteLogSchedule()    //goroutine
 	//--------------------------------------- Create super user ----------------------------
 	go app.CreateSuperUser(params.Superuseremail, params.Superuserpwd) //goroutine
 	// --------------------- SINGAL HANDLER -------------------
@@ -279,6 +279,28 @@ func (app *application) pingServerSchedule() {
 	//s.SingletonMode()
 
 	app.ServerPingScheduler.StartAsync()
+
+}
+
+// -----------------------------------------------------------------
+//
+// -----------------------------------------------------------------
+func (app *application) deleteLogSchedule() {
+	defer concurrent.Recoverer("deleteLogSchedule")
+	defer debug.SetPanicOnFault(debug.SetPanicOnFault(true))
+
+	checkEvery := env.GetEnvVariable("CHECK_LOG_FILES_EVERY", "24h")
+	if checkEvery == "0" {
+		return
+	}
+
+	deleteLogScheduler := gocron.NewScheduler(time.Local)
+
+	//s.WithDistributedLocker()
+	deleteLogScheduler.Every(checkEvery).Do(app.DeleteOldLogTables)
+	//s.SingletonMode()
+
+	deleteLogScheduler.StartAsync()
 
 }
 

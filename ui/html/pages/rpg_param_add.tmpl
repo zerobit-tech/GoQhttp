@@ -10,8 +10,15 @@ Add
             <div class="card-header">
                 <p class="h5">
                     {{if .Form.ID}} Edit {{else}} Add {{end}} Program Field
-
-                  
+ 
+                   {{if .Form.ID}} 
+                    <a class="btn btn-ghost-danger float-right"   hx-push-url="true" 
+                     data-toggle="tooltip" data-placement="bottom" title="Delete" 
+                     href='/pgmfields/delete/{{.Form.ID}}'  >   
+                      <svg class="c-icon mfe-2">
+                      <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-trash"></use>
+                  </svg></a>
+                    {{end}}
                 </p>
             </div>
             <div class="card-body">
@@ -76,7 +83,10 @@ Add
               
                       </div>
                     {{end}}
+
+
                     <button type="submit" class="btn btn-primary">Submit</button>
+
 
 
                 </form>

@@ -4,15 +4,20 @@ import (
 	"context"
 	"errors"
 	"log"
+	"os"
+	"path/filepath"
 	"runtime/debug"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/onlysumitg/godbc"
+	"github.com/zerobit-tech/GoQhttp/env"
 	"github.com/zerobit-tech/GoQhttp/internal/ibmiServer"
 	"github.com/zerobit-tech/GoQhttp/internal/storedProc"
 	"github.com/zerobit-tech/GoQhttp/lic"
 	"github.com/zerobit-tech/GoQhttp/utils/concurrent"
+	"github.com/zerobit-tech/GoQhttp/utils/ioutils"
 )
 
 // --------------------------------
@@ -271,4 +276,43 @@ func (app *application) ProcessSyncUserToken(s *ibmiServer.Server, tk *storedPro
 		tk.StatusMessage = err.Error()
 	}
 	s.UpdateStatusUserTokenTable(*tk)
+}
+
+// --------------------------------
+//
+//	for all servers
+//
+// --------------------------------
+func (app *application) DeleteOldLogTables() {
+	deletEvery := env.GetEnvVariable("DELETE_LOG_FILES_OLDER_THAN_X_DAYS", "24h")
+
+	forLastDays, err := strconv.Atoi(deletEvery)
+	if err != nil {
+		forLastDays = 7
+	}
+
+	t := time.Duration(forLastDays * 24)
+
+	files, err := ioutils.FindFilesOlderThan("./db", t*time.Hour)
+	if err != nil {
+		log.Println("Failed: Deleting old log files", err.Error())
+	}
+
+	for _, f := range files {
+
+		if strings.HasPrefix(f.Name(), "log_") || strings.HasPrefix(f.Name(), "systemlog_") {
+			path, err := filepath.Abs(filepath.Join("./db", f.Name()))
+			if err == nil {
+
+				log.Println("Deleting old log file", path)
+				err = os.Remove(path)
+				if err != nil {
+					log.Println("Failed: Deleting old log file", path, err.Error())
+
+				}
+
+			}
+		}
+	}
+
 }

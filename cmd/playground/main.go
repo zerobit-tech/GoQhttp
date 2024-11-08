@@ -10,20 +10,18 @@ import (
 	"time"
 
 	"github.com/zerobit-tech/GoQhttp/utils/concurrent"
+	"github.com/zerobit-tech/GoQhttp/utils/ioutils"
 )
 
 func main() {
-	start := time.Now()
-	var wg sync.WaitGroup
-	for i := 0; i <= 20000; i++ {
-		wg.Add(1)
-		go main2(&wg)
+	x, err := ioutils.FindFilesOlderThanOneDay("./db", 35*time.Minute)
+	if err != nil {
+		panic(err)
 	}
 
-	wg.Wait()
-
-	fmt.Println("Total time :::", time.Since(start))
+	fmt.Println(x)
 }
+
 func main2(wg *sync.WaitGroup) {
 	defer concurrent.Recoverer("main2")
 	defer wg.Done()

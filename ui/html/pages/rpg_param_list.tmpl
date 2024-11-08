@@ -45,19 +45,14 @@ Field
 
             <td>
                  
-                  <a  hx-push-url="true"  class="btn btn-ghost-info" href='/pgmfields/{{.ID}}'  >View</a>   
                   <a  hx-push-url="true"  class="btn btn-ghost-info" 
                      data-toggle="tooltip" data-placement="bottom" title="Edit" 
                      href='/pgmfields{{if .IsDs}}ds{{end}}/update/{{.ID}}'  >   <svg class="c-icon mfe-2">
                       <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-pencil"></use>
                   </svg></a> 
+                  <a  hx-push-url="true"  class="btn btn-ghost-info" href='/pgmfields/{{.ID}}'  >View</a>   
                
-                  <a class="btn btn-ghost-danger"   hx-push-url="true" 
-                     data-toggle="tooltip" data-placement="bottom" title="Delete" 
-                     href='/pgmfields/delete/{{.ID}}'  >   
-                      <svg class="c-icon mfe-2">
-                      <use xlink:href="/static/coreui/vendors/coreui/icons/svg/free.svg#cil-trash"></use>
-                  </svg></a>
+            
             </td>
 
         </tr>
