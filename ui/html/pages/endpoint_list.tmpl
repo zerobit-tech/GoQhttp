@@ -10,6 +10,10 @@ EndPoints
     <div class="card" id="eplistcard">
       <div class="card-header">
         <p class="h5">Endpoints
+      {{if .CurrentUser.IsSuperUser}}
+
+                  <a hx-push-url="true" class="btn btn-ghost-info float-right" href="/endpoints?loadspecial=Y">Show all</a>
+                  {{end}}
           <a hx-push-url="true" class="btn btn-ghost-info float-right" href="/endpoints/add">+Add</a>
           <a hx-push-url="true" class="btn btn-ghost-info float-right" href="/endpoints/help">Help</a>
 

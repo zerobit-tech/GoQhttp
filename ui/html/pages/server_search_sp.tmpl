@@ -54,7 +54,7 @@ Search Stored Proc
             </div>
 
             <div class="col-auto">
-              <button type="submit" class="btn btn-primary  ">Search</button>
+              <button type="submit" class="btn btn-info">Search</button>
             </div>
           </div>
         </form>
@@ -88,7 +88,10 @@ Search Stored Proc
                 <td>{{.SpecificLib}}/{{.SpecificName}}</td>
                 <td>{{.Modified}}</td>
                 <td nowrap>
-                  <a  hx-indicator="#processing"  hx-select="#spaddcard" hx-target="#spaddcol" class="btn btn-ghost-info" hx-get='/sp/add?server={{$.Server.ID}}&sp={{.SpecificName}}&lib={{.SpecificLib}}&spcific=Y'>
+                  <a  hx-indicator="#processing"  
+                  hx-select="#spaddcard" hx-target="#spaddcol" 
+                  class="btn btn-info" 
+                  hx-get='/sp/add?server={{$.Server.ID}}&sp={{.SpecificName}}&lib={{.SpecificLib}}&spcific=Y'>
 
                     Select</a>
 

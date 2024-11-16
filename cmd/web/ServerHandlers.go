@@ -99,6 +99,8 @@ func (app *application) ServerHandlers(router *chi.Mux) {
 		superadmingroup.Get("/delete/{serverid}", app.ServerDelete)
 		superadmingroup.Post("/delete", app.ServerDeleteConfirm)
 
+		superadmingroup.Get("/reloadpgmdrivers/{serverid}", app.ReloadPGMDrivers)
+
 		superadmingroup.Get("/runpromotions/{serverid}", app.RunPromotion)
 
 		superadmingroup.Get("/clearcache/{serverid}", app.ClearCache)
@@ -254,7 +256,13 @@ func (app *application) ServerDeleteConfirm(w http.ResponseWriter, r *http.Reque
 	}
 
 	serverID := r.PostForm.Get("serverid")
-
+	server, err := app.servers.Get(serverID)
+	if err != nil {
+		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("Error deleting server: %s", err.Error()))
+		app.goBack(w, r, http.StatusBadRequest)
+		return
+	}
+	app.deleteRPGDriversForServer(server)
 	err = app.servers.Delete(serverID)
 	if err != nil {
 
@@ -340,6 +348,10 @@ func (app *application) ClearCache(w http.ResponseWriter, r *http.Request) {
 		app.goBack(w, r, http.StatusSeeOther)
 		return
 	}
+
+	app.deleteRPGDriversForServer(server)
+	app.createRPGDriversForServer(server)
+
 	app.sessionManager.Put(r.Context(), "flash", "Cache cleared")
 
 	app.goBack(w, r, http.StatusSeeOther)
@@ -488,6 +500,12 @@ func (app *application) ServerAddPost(w http.ResponseWriter, r *http.Request) {
 		app.serverError500(w, r, err)
 		return
 	}
+
+	go func() {
+		defer concurrent.Recoverer("Server ADD log")
+		app.deleteRPGDriversForServer(&server)
+		app.createRPGDriversForServer(&server)
+	}()
 
 	//db, err := server.GetSingleConnection()
 	// defer db.Close()
@@ -758,6 +776,26 @@ func (app *application) createPromotionTable(w http.ResponseWriter, r *http.Requ
 
 		app.sessionManager.Put(r.Context(), "flash", "done")
 	}
+
+	app.goBack(w, r, http.StatusSeeOther)
+
+}
+
+// ------------------------------------------------------
+// Delete servet
+// ------------------------------------------------------
+func (app *application) ReloadPGMDrivers(w http.ResponseWriter, r *http.Request) {
+
+	serverID := chi.URLParam(r, "serverid")
+
+	server, err := app.servers.Get(serverID)
+	if err != nil {
+		app.sessionManager.Put(r.Context(), "error", fmt.Sprintf("Error relading PGM drivers: %s", err.Error()))
+		app.goBack(w, r, http.StatusBadRequest)
+		return
+	}
+
+	app.deleteRPGDriversForServer(server)
 
 	app.goBack(w, r, http.StatusSeeOther)
 

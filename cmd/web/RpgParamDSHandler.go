@@ -197,7 +197,7 @@ func (app *application) rpgParamDSAddPost(w http.ResponseWriter, r *http.Request
 	}()
 
 	//http.Redirect(w, r, fmt.Sprintf("/savesql/%s", id), http.StatusSeeOther)
-	http.Redirect(w, r, fmt.Sprintf("/pgmfields", id), http.StatusSeeOther)
+	http.Redirect(w, r, "/pgmfields", http.StatusSeeOther)
 
 }
 
