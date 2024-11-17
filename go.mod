@@ -18,7 +18,6 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/jprobinson/eazye v0.0.0-20200316195029-00167c745a93
 	github.com/justinas/nosurf v1.1.1
-	github.com/microsoft/go-mssqldb v1.3.0
 	github.com/onlysumitg/godbc v0.0.40
 	github.com/rbretecher/go-postman-collection v0.9.0
 	github.com/sirupsen/logrus v1.9.0
@@ -32,8 +31,6 @@ require (
 require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/go-test/deep v1.1.0 // indirect
-	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
-	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/influxdata/tdigest v0.0.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
